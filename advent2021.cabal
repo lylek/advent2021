@@ -1,12 +1,12 @@
 cabal-version:       2.4
-name:                advent-2021
+name:                advent2021
 version:             0.0.0.0
 synopsis:            See README for more info
 description:
     See README for more info.
-    See [README.md](https://github.com/lylek/advent-2021#advent-2021) for more details.
-homepage:            https://github.com/lylek/advent-2021
-bug-reports:         https://github.com/lylek/advent-2021/issues
+    See [README.md](https://github.com/lylek/advent2021#advent2021) for more details.
+homepage:            https://github.com/lylek/advent2021
+bug-reports:         https://github.com/lylek/advent2021/issues
 license:             BSD-3-Clause
 license-file:        LICENSE
 author:              Lyle Kopnicky
@@ -19,7 +19,7 @@ tested-with:         GHC == 8.10.7
 
 source-repository head
   type:                git
-  location:            https://github.com/lylek/advent-2021.git
+  location:            https://github.com/lylek/advent2021.git
 
 common common-options
   build-depends:       base ^>= 4.14.3.0
@@ -48,13 +48,27 @@ common common-options
 library
   import:              common-options
   hs-source-dirs:      src
-  exposed-modules:     Advent2021
+  exposed-modules:     Advent2021,
+                       Advent2021.Day01
 
-executable advent-2021
+executable advent2021
   import:              common-options
   hs-source-dirs:      app
   main-is:             Main.hs
-  build-depends:       advent-2021
+  build-depends:       advent2021
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N
+
+test-suite advent2021-test
+  import:              common-options
+  type:                exitcode-stdio-1.0
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  other-modules:       Advent2021.Day01Spec
+  build-depends:       advent2021,
+                       hspec
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+

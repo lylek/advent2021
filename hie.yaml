@@ -1,0 +1,10 @@
+cradle:
+  stack:
+    - path: "./src"
+      component: "advent2021:lib"
+
+    - path: "./app/Main.hs"
+      component: "advent2021:exe:advent2021"
+
+    - path: "./test"
+      component: "advent2021:test:advent2021-test"

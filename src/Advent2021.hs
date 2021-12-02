@@ -10,6 +10,5 @@ module Advent2021
     ( projectName
     ) where
 
-
 projectName :: String
-projectName = "advent-2021"
+projectName = "advent2021"
