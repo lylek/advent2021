@@ -12,7 +12,6 @@ module Advent2021.Day04
   where
 
 import Data.Either
-import Data.Foldable (foldlM)
 import Data.IntMap.Strict (IntMap)
 import Data.IntMap.Strict qualified as IM
 import Data.Attoparsec.Text
@@ -21,9 +20,10 @@ import Safe
 
 part1 :: String -> String
 part1 input =
-  let (calledNums, boards) = parseGame input
-      score = getFirstWinningScore calledNums boards
-  in show score
+  let (calledNums, boards) = parseGame input in
+    case getFirstWinningScore calledNums boards of
+      Nothing -> error "no winning score"
+      Just score -> show score
 
 parseGame :: String -> ([Int], [Board])
 parseGame input =
@@ -31,23 +31,20 @@ parseGame input =
     Left err -> error $ "parse error: " ++ err
     Right res -> res
 
-getFirstWinningScore :: [Int] -> [Board] -> Int
+getFirstWinningScore :: [Int] -> [Board] -> Maybe Int
 getFirstWinningScore calledNums boards =
-  case applyCalledNumbersToBoards calledNums boards of
-    Left s -> s
-    Right _ -> error "no winning board"
+  headMay $ applyCalledNumbersToBoards calledNums boards
 
-part2 :: String -> String 
+part2 :: String -> String
 part2 input =
-  let (calledNums, boards) = parseGame input
-      score = getLastWinningScore calledNums boards
-  in show score
+  let (calledNums, boards) = parseGame input in
+    case getLastWinningScore calledNums boards of
+      Nothing -> error "no winning score"
+      Just score -> show score
 
-getLastWinningScore :: [Int] -> [Board] -> Int
+getLastWinningScore :: [Int] -> [Board] -> Maybe Int
 getLastWinningScore calledNums boards =
-  case lastMay $ applyCalledNumbersToBoards' calledNums boards of
-    Nothing -> error "no winning board"
-    Just score -> score
+  lastMay $ applyCalledNumbersToBoards calledNums boards
 
 data Position = Position
   { p_row :: Int
@@ -110,39 +107,21 @@ applyCalledNumber calledNum board = case IM.lookup calledNum (b_unmarkedNumbers 
         sumOfUnmarked = sum $ IM.keys unmarkedNumbers'
     in if win then Left (calledNum * sumOfUnmarked) else Right board'
 
-applyCalledNumberToBoards :: Int -> [Board] -> Either Int [Board]
-applyCalledNumberToBoards = traverse . applyCalledNumber
-
-applyCalledNumbersToBoards :: [Int] -> [Board] -> Either Int [Board]
-applyCalledNumbersToBoards calledNums boards = foldlM (flip applyCalledNumberToBoards) boards calledNums
-
-{-
-Method for first part involved using Either monad, so that as soon as a winner was found, the computation aborted.
-Now we need to find the last winner. Can we generate a list lazily so that the caller can drive the computation by
-either taking the first winner or the last one?
-
-This only works if you are producing a list, and can produce a cons as a result, with a thunk for the tail.
-If you have to return a list and something else, you can't write it as a cons. But why can't we just produce
-a list? The callers don't really need the boards, right?
-
-applyCalledNumber for the first part returned Either Int Board. If there is a winner, it returns the score, but
-if not, it returns the Board. For the second part, it can still do the same, because if the board has won, we don't
-want to include it in the list anymore.
-
-One issue is that multiple boards could potentially win for a given called number. Then it's not clear in which
-order the winners should be ranked. Supposedly, the test data don't produce an ambiguous situation. But we have
-to handle it somehow in the code. It seems easiest to assume that if there are several winners for a called number,
-they are announced in board order.
--}
-
-applyCalledNumberToBoards' :: Int -> [Board] -> ([Int], [Board])
-applyCalledNumberToBoards' calledNum boards =
+-- The problem description doesn't make clear how we should handle things if multiple boards
+-- contain a called number. Probably this case won't occur in the test data. So we'll handle
+-- it by returning all the winners, in the order the boards were defined.
+--
+applyCalledNumberToBoards :: Int -> [Board] -> ([Int], [Board])
+applyCalledNumberToBoards calledNum boards =
   let boardsAfterNumber = applyCalledNumber calledNum <$> boards
   in partitionEithers boardsAfterNumber
 
-applyCalledNumbersToBoards' :: [Int] -> [Board] -> [Int]
-applyCalledNumbersToBoards' _calledNums [] = [] -- don't need to call any more numbers because everyone has won
-applyCalledNumbersToBoards' [] _boards = [] -- no more numbers to call, so there can be no more winners
-applyCalledNumbersToBoards' (calledNum : calledNums') boards =
-  let (winners, boards') = applyCalledNumberToBoards' calledNum boards
-  in winners ++ applyCalledNumbersToBoards' calledNums' boards'
+-- This function will lazily produce winners, so Part 1 will stop after calculating the first winning score,
+-- but Part 2 can continue on to calculate the last winning score.
+--
+applyCalledNumbersToBoards :: [Int] -> [Board] -> [Int]
+applyCalledNumbersToBoards _calledNums [] = [] -- don't need to call any more numbers because everyone has won
+applyCalledNumbersToBoards [] _boards = [] -- no more numbers to call, so there can be no more winners
+applyCalledNumbersToBoards (calledNum : calledNums') boards =
+  let (winners, boards') = applyCalledNumberToBoards calledNum boards
+  in winners ++ applyCalledNumbersToBoards calledNums' boards'
