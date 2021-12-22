@@ -37,8 +37,7 @@ common common-options
     ghc-options:       -Wmissing-export-lists
                        -Wpartial-fields
   if impl(ghc >= 8.8)
-    ghc-options:       -Wmissing-deriving-strategies
-                       -fwrite-ide-info
+    ghc-options:       -fwrite-ide-info
                        -hiedir=.hie
   if impl(ghc >= 8.10)
     ghc-options:       -Wunused-packages
@@ -47,9 +46,17 @@ common common-options
 
 library
   import:              common-options
+  build-depends:       attoparsec,
+                       containers,
+                       pretty-simple,
+                       safe,
+                       text
   hs-source-dirs:      src
   exposed-modules:     Advent2021,
-                       Advent2021.Day01
+                       Advent2021.Day01,
+                       Advent2021.Day02,
+                       Advent2021.Day03,
+                       Advent2021.Day04
 
 executable advent2021
   import:              common-options
@@ -65,8 +72,12 @@ test-suite advent2021-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Advent2021.Day01Spec
+  other-modules:       Advent2021.Day01Spec,
+                       Advent2021.Day02Spec,
+                       Advent2021.Day03Spec,
+                       Advent2021.Day04Spec
   build-depends:       advent2021,
+                       heredoc,
                        hspec
   ghc-options:         -threaded
                        -rtsopts

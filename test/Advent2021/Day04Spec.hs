@@ -11,6 +11,9 @@ spec = describe "Day 04 tests" $ do
   it "calculates the right answer for part 1" $ do
     part1 sample `shouldBe` "4512"
 
+  it "calculates the right answer for part 2" $ do
+    part2 sample `shouldBe` "1924"
+
 sample :: String
 sample =
   [str|7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
