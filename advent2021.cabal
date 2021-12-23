@@ -56,7 +56,8 @@ library
                        Advent2021.Day01,
                        Advent2021.Day02,
                        Advent2021.Day03,
-                       Advent2021.Day04
+                       Advent2021.Day04,
+                       Advent2021.Day05
 
 executable advent2021
   import:              common-options
@@ -75,8 +76,10 @@ test-suite advent2021-test
   other-modules:       Advent2021.Day01Spec,
                        Advent2021.Day02Spec,
                        Advent2021.Day03Spec,
-                       Advent2021.Day04Spec
+                       Advent2021.Day04Spec,
+                       Advent2021.Day05Spec
   build-depends:       advent2021,
+                       containers,
                        heredoc,
                        hspec
   ghc-options:         -threaded
