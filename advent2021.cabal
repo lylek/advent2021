@@ -48,8 +48,9 @@ library
   import:              common-options
   build-depends:       attoparsec,
                        containers,
-                       pretty-simple,
+                       -- pretty-simple,
                        safe,
+                       split,
                        text
   hs-source-dirs:      src
   exposed-modules:     Advent2021,
@@ -57,7 +58,8 @@ library
                        Advent2021.Day02,
                        Advent2021.Day03,
                        Advent2021.Day04,
-                       Advent2021.Day05
+                       Advent2021.Day05,
+                       Advent2021.Day06
 
 executable advent2021
   import:              common-options
@@ -77,7 +79,8 @@ test-suite advent2021-test
                        Advent2021.Day02Spec,
                        Advent2021.Day03Spec,
                        Advent2021.Day04Spec,
-                       Advent2021.Day05Spec
+                       Advent2021.Day05Spec,
+                       Advent2021.Day06Spec
   build-depends:       advent2021,
                        containers,
                        heredoc,
