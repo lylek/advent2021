@@ -39,7 +39,7 @@ main = do
           _ -> error $ "unknown part " ++ show part
         6 -> case part of
           1 -> Day06.part1
-          2 -> undefined -- Day06.part2
+          2 -> Day06.part2
           _ -> error $ "unknown part " ++ show part
         _ -> error $ "unknown day " ++ show day
   inputStr <- readFile filename
