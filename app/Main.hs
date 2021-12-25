@@ -9,6 +9,7 @@ import Advent2021.Day03 qualified as Day03
 import Advent2021.Day04 qualified as Day04
 import Advent2021.Day05 qualified as Day05
 import Advent2021.Day06 qualified as Day06
+import Advent2021.Day07 qualified as Day07
 
 main :: IO ()
 main = do
@@ -40,6 +41,10 @@ main = do
         6 -> case part of
           1 -> Day06.part1
           2 -> Day06.part2
+          _ -> error $ "unknown part " ++ show part
+        7 -> case part of
+          1 -> Day07.part1
+          2 -> Day07.part2
           _ -> error $ "unknown part " ++ show part
         _ -> error $ "unknown day " ++ show day
   inputStr <- readFile filename
