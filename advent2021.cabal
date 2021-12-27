@@ -88,7 +88,8 @@ test-suite advent2021-test
   build-depends:       advent2021,
                        containers,
                        heredoc,
-                       hspec
+                       hspec,
+                       QuickCheck
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N

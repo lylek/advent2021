@@ -49,4 +49,3 @@ main = do
         _ -> error $ "unknown day " ++ show day
   inputStr <- readFile filename
   putStrLn $ func inputStr
-  pure ()
