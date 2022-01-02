@@ -1,0 +1,203 @@
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\title{Advent of Code 2021: Day 7}
+\author{Lyle Kopnicky}
+\maketitle
+\section{Introduction}
+The crabs are located at positions $p_i$ for $0 \le i < n$.
+The cost of fuel for a crab to move from position $x$ to position $y$ is
+\begin{equation}\label{eq:fuel-cost}
+  c(x, y) = \sum_{j=0}^{|x-y|} j.
+\end{equation}
+To minimize the amount of fuel expended by the crabs, we must choose a position $y$
+such that the total cost for all crab movements,
+\begin{equation}
+  t(y) = \sum_{i=0}^{n-1} c(p_i, y),
+\end{equation}
+is minimized.
+
+By finding the antidifference of \eqref{eq:fuel-cost}, we can see that the
+fuel cost is very close to the square of the distance moved:
+\begin{equation}
+  c(x, y) = \frac{|x - y|(|x - y| + 1)}{2}
+\end{equation}
+
+This is very close to the square of the distance.
+So, it seems possible that, since the arithmetic mean minimizes
+the sum of squared errors, it might minimize the sum
+of this fuel cost.
+
+In fact, it does, and we will prove it. However, there's a hitch:
+the mean may not be integral. In that case, it turns out that the
+position of minimal cost will be one or both of the integers closest
+to the mean, on either side.
+
+Our proof consists of two steps:
+\begin{enumerate}
+  \item Prove that if a position is to the left of the mean, then
+  moving further left will increase the total cost.
+  \item Prove that if a position is to the right of the mean, then
+  moving further right will increase the total cost.
+\end{enumerate}
+If we can prove these, then we can be sure that there are at most
+two points with minimum cost, and if there are two, they are adjacent.
+We can also calculate the mean and know that either:
+\begin{enumerate}
+  \item It falls on an integer: Then the mean is the unique position
+        of minimum cost.
+  \item It falls between integers: Then one or both of the positions
+        to the left or right of the mean has the minimum cost.
+\end{enumerate}
+So, finding the position with minimum cost would involve calculating
+the mean, then testing the adjacent points to see which has a lower
+cost.
+
+\section{Left of the mean}
+
+Let's first show that for any position to the left of the mean,
+moving further left increases the cost. First, recall the formula
+for the mean:
+%
+\begin{equation}\label{eq:mean}
+  m = \frac{1}{n} \sum_{i=0}^{n-1} p_i
+\end{equation}
+
+Now choose an arbitrary position $y$ less than or equal to the mean $m$.
+We want to show that the total cost is higher at $y-1$ than at $y$.
+To do this, we will show that $t(y-1)-t(y) > 0$.
+
+\begin{equation*}
+  \begin{split}
+    t(y-1)-t(y) &= \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i - y, & \quad\text{if}\ p_i < y \\
+      p_i - y + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= -ny + \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i, & \quad\text{if}\ p_i < y \\
+      p_i + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= -n(y-m+m) + \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i, & \quad\text{if}\ p_i < y \\
+      p_i + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= -n(y-m) -nm + \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i, & \quad\text{if}\ p_i < y \\
+      p_i + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= n(m-y) -nm + \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i, & \quad\text{if}\ p_i < y \\
+      p_i + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= n(m-y) -\sum_{i=0}^{n-1} p_i + \sum_{i=0}^{n-1}
+    \begin{cases}
+      p_i, & \quad\text{if}\ p_i < y \\
+      p_i + 1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+    &= n(m-y) + \sum_{i=0}^{n-1}
+    \begin{cases}
+      0, & \quad\text{if}\ p_i < y \\
+      1, & \quad\text{if}\ p_i >= y \\
+    \end{cases} \\
+  \end{split}
+\end{equation*}
+
+Since $y<=m$, and $n$ must be positive, the term $n(m-y)$ must be
+non-negative. The summation term must be positive as long as there
+is at least one $i$ such that $p_i >= y$.
+
+To show that there is at least one $p_i >= y$, recall that $y <= m$,
+so we only need to show that there is at least one $p_i >= m$.
+Then consider the definition of the mean \eqref{eq:mean}. If all
+the $p_i$ were less than $m$, then $\sum_{i=0}^{n-1} p_i$ would be
+less than $nm$, so $m$ would be less than $m$, a contradiction.
+Thus there must be at least one $p_i$ greater than or equal to $m$,
+and therefore greater than or equal to $y$.
+
+Since we have at least one $p_i >= y$, the last summation term
+in the calculation of $t(y-1) - t(y)$ must be positive, and since
+the $n(m-y)$ term is non-negative, we have that $t(y-1) - t(y)$ is
+positive. Therefore, the total fuel cost at $t(y-1)$ is greater than
+the total fuel cost at $t(y)$, when $y <= m$.
+
+\section{Right of the mean}
+
+Secondly, we must prove that when $y >= m$, the total fuel cost
+$t(y+1)$ is greater than the total fuel cost $t(y)$. The steps
+are the same as the $y <= m$ case, but with some of the signs flipped:
+
+\begin{equation*}
+  \begin{split}
+    t(y+1)-t(y) &= \sum_{i=0}^{n-1}
+    \begin{cases}
+      y - p_i, & \quad\text{if}\ p_i > y \\
+      y - p_i + 1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+    &= ny + \sum_{i=0}^{n-1}
+    \begin{cases}
+      -p_i, & \quad\text{if}\ p_i > y \\
+      -p_i + 1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+    &= n(y-m+m) + \sum_{i=0}^{n-1}
+    \begin{cases}
+      -p_i, & \quad\text{if}\ p_i > y \\
+      -p_i + 1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+    &= n(y-m) +nm + \sum_{i=0}^{n-1}
+    \begin{cases}
+      -p_i, & \quad\text{if}\ p_i > y \\
+      -p_i + 1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+    &= n(y-m) +\sum_{i=0}^{n-1} p_i + \sum_{i=0}^{n-1}
+    \begin{cases}
+      -p_i, & \quad\text{if}\ p_i > y \\
+      -p_i + 1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+    &= n(y-m) + \sum_{i=0}^{n-1}
+    \begin{cases}
+      0, & \quad\text{if}\ p_i > y \\
+      1, & \quad\text{if}\ p_i <= y \\
+    \end{cases} \\
+  \end{split}
+\end{equation*}
+
+Since $y>=m$, and $n$ must be positive, the term $n(y-m)$ must be
+non-negative. The summation term must be positive as long as there
+is at least one $i$ such that $p_i <= y$.
+
+To show that there is at least one $p_i <= y$, recall that $y >= m$,
+so we only need to show that there is at least one $p_i <= m$.
+Then consider the definition of the mean \eqref{eq:mean}. If all
+the $p_i$ were greater than $m$, then $\sum_{i=0}^{n-1} p_i$ would be
+greater than $nm$, so $m$ would be greater than $m$, a contradiction.
+Thus there must be at least one $p_i$ less than or equal to $m$,
+and therefore less than or equal to $y$.
+
+Since we have at least one $p_i <= y$, the last summation term
+in the calculation of $t(y+1) - t(y)$ must be positive, and since
+the $n(y-m)$ term is non-negative, we have that $t(y+1) - t(y)$ is
+positive. Therefore, the total fuel cost at $t(y+1)$ is greater than
+the total fuel cost at $t(y)$, when $y >= m$.
+
+\section{Conclusions}
+
+These two proofs lead us to the following conclusions:
+\begin{enumerate}
+  \item The position $\lfloor m \rfloor$, the greatest integer less
+        than or equal to the mean, must have the minimal cost of all
+        positions less than or equal to the mean.
+  \item The position $\lceil m \rceil$, the least integer greater than
+        or equal to the mean, must have the minimal cost of all positions
+        greater than or equal to the mean.
+  \item Either position $\lfloor m \rfloor$, $\lceil m \rceil$, or
+        both, must have minimal total fuel cost.
+  \item If $m$ is integral, then that position has minimal total fuel
+        cost.
+\end{enumerate}
+
+\end{document}

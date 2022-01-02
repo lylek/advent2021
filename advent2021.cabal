@@ -49,6 +49,7 @@ library
   import:              common-options
   build-depends:       attoparsec,
                        containers,
+                       hvega,
                        -- pretty-simple,
                        safe,
                        split,
@@ -62,13 +63,25 @@ library
                        Advent2021.Day04,
                        Advent2021.Day05,
                        Advent2021.Day06,
-                       Advent2021.Day07
+                       Advent2021.Day07,
+                       Advent2021.Day07.Continuous
 
 executable advent2021
   import:              common-options
   hs-source-dirs:      app
   main-is:             Main.hs
   build-depends:       advent2021
+  ghc-options:         -threaded
+                       -rtsopts
+                       -with-rtsopts=-N
+
+executable day07vis
+  import:              common-options
+  hs-source-dirs:      app
+  main-is:             Day07Vis.hs
+  build-depends:       advent2021,
+                       aeson,
+                       hvega
   ghc-options:         -threaded
                        -rtsopts
                        -with-rtsopts=-N
