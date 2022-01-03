@@ -65,6 +65,7 @@ library
                        Advent2021.Day06,
                        Advent2021.Day07,
                        Advent2021.Day07.Continuous
+                       Advent2021.Day08
 
 executable advent2021
   import:              common-options
@@ -97,7 +98,8 @@ test-suite advent2021-test
                        Advent2021.Day04Spec,
                        Advent2021.Day05Spec,
                        Advent2021.Day06Spec,
-                       Advent2021.Day07Spec
+                       Advent2021.Day07Spec,
+                       Advent2021.Day08Spec
   build-depends:       advent2021,
                        containers,
                        heredoc,
