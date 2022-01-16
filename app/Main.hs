@@ -12,6 +12,7 @@ import Advent2021.Day06 qualified as Day06
 import Advent2021.Day07 qualified as Day07
 import Advent2021.Day08 qualified as Day08
 import Advent2021.Day09 qualified as Day09
+import Advent2021.Day10 qualified as Day10
 import GHC.Stack
 
 main :: HasCallStack => IO ()
@@ -56,6 +57,10 @@ main = do
         9 -> case part of
           1 -> Day09.part1
           2 -> Day09.part2
+          _ -> error $ "unknown part " ++ show part
+        10 -> case part of
+          1 -> Day10.part1
+          2 -> Day10.part2
           _ -> error $ "unknown part " ++ show part
         _ -> error $ "unknown day " ++ show day
   inputStr <- readFile filename
