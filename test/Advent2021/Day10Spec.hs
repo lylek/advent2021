@@ -12,6 +12,9 @@ spec = describe "Day 10 tests" $ do
   it "calculates the right answer for part 1" $ do
     part1 sample `shouldBe` "26397"
 
+  it "calculates the right answer for part 2" $ do
+    part2 sample `shouldBe` "288957"
+
 sample :: String
 sample =
     [str|[({(<(())[]>[[{[]{<()<>>
