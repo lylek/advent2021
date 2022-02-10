@@ -5,4 +5,4 @@
 [![Stackage Nightly](http://stackage.org/package/advent2021/badge/nightly)](http://stackage.org/nightly/package/advent2021)
 [![BSD-3-Clause license](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE)
 
-See README for more info
+Haskell solutions to [Advent of Code 2021](https://adventofcode.com/2021)
